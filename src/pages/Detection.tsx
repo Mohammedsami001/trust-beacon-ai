@@ -72,42 +72,73 @@ export default function Detection() {
           description: "Please log in to analyze files.",
           variant: "destructive",
         });
+        setIsAnalyzing(false);
         return;
       }
 
-      // Simulate API call (replace with actual backend endpoint)
-      // In production, you would send the file to your FastAPI backend
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Simulated response - in production this would come from your FastAPI backend
-      const mockResults: Record<DetectionType, DetectionResult> = {
-        image: {
-          trust_score: Math.floor(Math.random() * 40) + 60,
-          verdict: Math.random() > 0.5 ? "AUTHENTIC" : "MANIPULATED",
-          explanation: "The AI analysis detected consistent facial geometry and natural lighting patterns. No significant GAN artifacts were found in the image. The metadata appears unmodified and consistent with the claimed source device.",
-        },
-        video: {
-          trust_score: Math.floor(Math.random() * 40) + 55,
-          verdict: Math.random() > 0.5 ? "AUTHENTIC" : "SUSPICIOUS",
-          explanation: "Frame-by-frame analysis shows consistent temporal patterns. Lip movements appear synchronized with audio. Minor compression artifacts detected but within normal parameters for this codec.",
-        },
-        audio: {
-          trust_score: Math.floor(Math.random() * 40) + 65,
-          verdict: Math.random() > 0.5 ? "AUTHENTIC" : "MANIPULATED",
-          explanation: "Spectral analysis reveals natural voice patterns. No text-to-speech signatures detected. Background noise is consistent throughout the recording without signs of splicing.",
-        }
-      };
+      if (activeTab === "image") {
+        // Use the real AI-powered detection endpoint
+        const formData = new FormData();
+        formData.append("image", selectedFile);
 
-      setResult(mockResults[activeTab]);
-      
-      toast({
-        title: "Analysis Complete",
-        description: `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} analysis finished successfully.`,
-      });
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/detect-image`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Analysis failed with status ${response.status}`);
+        }
+
+        const analysisResult = await response.json();
+        
+        setResult({
+          trust_score: analysisResult.trust_score,
+          verdict: analysisResult.verdict,
+          explanation: analysisResult.explanation,
+          metadata: analysisResult.metadata,
+        });
+        
+        toast({
+          title: "Analysis Complete",
+          description: "Image analysis finished successfully using AI.",
+        });
+      } else {
+        // For video and audio, use simulated results (prototype)
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        const mockResults: Record<"video" | "audio", DetectionResult> = {
+          video: {
+            trust_score: Math.floor(Math.random() * 40) + 55,
+            verdict: Math.random() > 0.5 ? "AUTHENTIC" : "SUSPICIOUS",
+            explanation: "Frame-by-frame analysis shows consistent temporal patterns. Lip movements appear synchronized with audio. Minor compression artifacts detected but within normal parameters for this codec.",
+          },
+          audio: {
+            trust_score: Math.floor(Math.random() * 40) + 65,
+            verdict: Math.random() > 0.5 ? "AUTHENTIC" : "MANIPULATED",
+            explanation: "Spectral analysis reveals natural voice patterns. No text-to-speech signatures detected. Background noise is consistent throughout the recording without signs of splicing.",
+          }
+        };
+
+        setResult(mockResults[activeTab as "video" | "audio"]);
+        
+        toast({
+          title: "Analysis Complete (Prototype)",
+          description: `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} analysis is using simulated results.`,
+        });
+      }
     } catch (error) {
+      console.error("Analysis error:", error);
       toast({
         title: "Analysis Failed",
-        description: "An error occurred during analysis. Please try again.",
+        description: error instanceof Error ? error.message : "An error occurred during analysis. Please try again.",
         variant: "destructive",
       });
     } finally {
