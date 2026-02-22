@@ -1,74 +1,83 @@
-🧠 Deepfake Trust Hub
-Intelligent Multi-Modal Deepfake Detection & Trust Verification System
+# 🧠 Deepfake Trust Hub  
+### Intelligent Multi-Modal Deepfake Detection & Trust Verification System
 
-Verify Reality. Defend Digital Trust.
+> **Verify Reality. Defend Digital Trust.**
 
-Deepfake Trust Hub is an AI-powered media authenticity verification system designed to detect manipulated content across images, videos, and audio. The platform analyzes spatial, temporal, and spectral inconsistencies using deep learning and produces a transparent Trust Score (0–100%) with explainable verdicts.
+Deepfake Trust Hub is an AI-powered media authenticity verification system designed to detect manipulated content across images, videos, and audio. The platform analyzes spatial inconsistencies using deep learning and generates a transparent **Trust Score (0–100%)** along with an explainable verdict.
 
-This prototype demonstrates a secure, production-oriented architecture integrating deep learning inference, API security, and scalable system design.
+This prototype demonstrates a secure, scalable, and production-oriented architecture integrating deep learning inference, API security, and modular system design.
 
-🌍 The Problem
+---
 
-Deepfakes threaten:
+## 🌍 The Problem
 
-Journalism credibility
+Synthetic media (deepfakes) pose serious threats to:
 
-Digital evidence integrity
+- Journalism credibility  
+- Digital evidence integrity  
+- Social media authenticity  
+- Political and public trust  
+- Cybersecurity ecosystems  
 
-Social media authenticity
+As generative AI becomes more advanced, automated and explainable detection systems are essential.
 
-Political and public trust
+Deepfake Trust Hub addresses this challenge by combining deep learning with secure API infrastructure.
 
-Cybersecurity ecosystems
+---
 
-As synthetic media becomes increasingly realistic, there is a critical need for automated, explainable, and secure detection systems.
+## 🚀 Core Capabilities
 
-Deepfake Trust Hub addresses this challenge.
+### 🖼 Image Deepfake Detection (Fully Implemented)
 
-🚀 Core Capabilities
-🖼 Image Deepfake Detection (Fully Implemented)
+- Custom-trained **ResNet-50 CNN**
+- Binary classification (Real vs Manipulated)
+- Spatial artifact detection
+- Sigmoid-based probability scoring
+- Trust Score generation (0–100%)
+- Human-readable explanation output
 
-Custom-trained ResNet-50 CNN
+---
 
-Binary classification (Real vs Manipulated)
+### 🎥 Video Detection (Architecture Ready)
 
-Spatial artifact detection
+- Frame-level spatial analysis pipeline
+- Temporal inconsistency detection design
+- Timestamp-based anomaly highlighting
+- Aggregated trust scoring model (planned)
 
-Sigmoid probability scoring
+---
 
-Confidence-based Trust Score
+### 🎧 Audio Detection (Architecture Ready)
 
-Human-readable explanation output
+- Spectrogram-based preprocessing pipeline
+- Synthetic voice anomaly modeling roadmap
+- Frequency-domain artifact detection design
 
-🎥 Video Deepfake Detection (Architecture Ready)
+---
 
-Frame-level spatial analysis
+## 🏗 System Architecture
 
-Temporal consistency evaluation pipeline
+```mermaid
+flowchart LR
+    A[User Upload Media] --> B[Authentication Layer]
+    B --> C[FastAPI Backend]
+    C --> D[Deep Learning Model]
+    D --> E[Trust Score Engine]
+    E --> F[Verdict + Explainability]
+```
 
-Suspicious timestamp detection design
+---
 
-Aggregated video trust scoring model
+## 🧠 AI Model Architecture
 
-🎧 Audio Deepfake Detection (Architecture Ready)
+### Backbone
+- ResNet-50
+- Custom fully connected classification head
+- No pretrained weights used
 
-Spectrogram-based processing pipeline
+### Custom Classification Head
 
-Synthetic voice anomaly detection design
-
-Spectral inconsistency modeling roadmap
-
-🏗 System Architecture
-🧠 AI Model Architecture
-Backbone
-
-ResNet-50 (from scratch configuration)
-
-No pretrained weights used
-
-Custom fully connected classification head
-
-Custom Classification Head
+```
 Linear (2048 → 1024)
 BatchNorm1d
 ReLU
@@ -81,147 +90,164 @@ Dropout (0.5)
 
 Linear (512 → 1)
 Sigmoid Activation
-Inference Logic
+```
 
-Output: Single logit
+### Inference Logic
 
-Activation: Sigmoid
+- Output: Single logit
+- Activation: Sigmoid
+- Threshold: 0.5
+- Trust Score = `probability_real × 100`
 
-Threshold: 0.5
+---
 
-Trust Score: probability_real × 100
+## 📊 API Response Format
 
-📊 API Response Format
+```json
 {
   "trust_score": 87,
   "verdict": "AUTHENTIC",
   "explanation": "No significant spatial manipulation artifacts detected"
 }
-🔐 Security & Authentication
+```
 
-JWT-based authentication
+---
 
-Secure inference endpoints
+## 🔐 Security & Authentication
 
-Token validation middleware
+- JWT-based authentication
+- Protected inference endpoints
+- Secure middleware verification
+- Stateless backend architecture
+- CORS-enabled configuration
 
-Stateless backend architecture
+All detection endpoints require authentication to ensure controlled inference access.
 
-CORS-enabled API configuration
+---
 
-All detection endpoints require authentication, ensuring controlled access to inference resources.
+## ⚙️ Technology Stack
 
-⚙️ Technology Stack
-Layer	Technology
-Backend API	FastAPI
-Deep Learning	PyTorch
-Model Backbone	ResNet-50
-Authentication	JWT-based
-Image Processing	Pillow + TorchVision
-Deployment	Cloud-based Python service
-📂 Project Structure
+| Layer | Technology |
+|--------|------------|
+| Backend API | FastAPI |
+| Deep Learning | PyTorch |
+| Model Backbone | ResNet-50 |
+| Image Processing | Pillow + TorchVision |
+| Authentication | JWT-based system |
+| Deployment | Cloud-based Python service |
+
+---
+
+## 📂 Project Structure
+
+```
 deepfake-backend/
 │
 ├── main.py                 # FastAPI entry point
 ├── models/
-│   └── image_detector.py   # ResNet-50 model loading & inference
+│   └── image_detector.py   # Model loading & inference logic
 ├── auth/
-│   └── supabase_auth.py    # JWT verification logic
+│   └── supabase_auth.py    # JWT verification middleware
 ├── requirements.txt
 └── best_resnet50.pth       # Trained model weights
-🧪 Running Locally
-1. Create Virtual Environment
+```
+
+---
+
+## 🧪 Running Locally
+
+### 1. Create Virtual Environment
+
+```bash
 python -m venv venv
 venv\Scripts\activate
-2. Install Dependencies
+```
+
+### 2. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-3. Start Server
+```
+
+### 3. Start the Server
+
+```bash
 uvicorn main:app --reload
-4. Access API Docs
+```
+
+### 4. Access API Documentation
+
+```
 http://127.0.0.1:8000/docs
-📈 Design Principles
-✅ Accuracy
+```
 
-Custom-trained CNN optimized for spatial artifact detection.
+---
 
-✅ Explainability
+## 📈 Design Principles
 
-Returns interpretable trust scores and reasoning text.
+### ✅ Accuracy  
+Custom-trained CNN optimized for spatial manipulation detection.
 
-✅ Security
+### ✅ Explainability  
+Returns interpretable trust scores and reasoning outputs.
 
-Protected inference endpoints with authentication.
+### ✅ Security  
+Authenticated API endpoints ensure protected inference access.
 
-✅ Scalability
+### ✅ Scalability  
+Modular architecture prepared for multi-modal expansion.
 
-Modular architecture ready for multi-modal expansion.
-
-✅ Extensibility
-
+### ✅ Extensibility  
 Future-ready pipeline for video and audio detection.
 
-🧩 Trust Score Engine
+---
 
-Trust Score is computed as:
+## 🔮 Future Roadmap
 
-Trust Score = Sigmoid(Logit) × 100
+- Temporal modeling for video deepfake detection  
+- Spectrogram-based CNN for audio deepfake detection  
+- Cross-modal consistency engine  
+- Attention heatmaps for visual explainability  
+- Confidence calibration and uncertainty modeling  
+- Edge inference optimization  
+- Enterprise API integration  
 
-Verdict logic:
+---
 
-≥ 50% → AUTHENTIC
+## 🎯 Target Applications
 
-< 50% → MANIPULATED
+- Media authentication platforms  
+- Journalism verification tools  
+- Social media moderation systems  
+- Digital forensics workflows  
+- Legal evidence validation  
+- Cybersecurity intelligence systems  
 
-This allows consistent probability-based evaluation.
+---
 
-🔮 Future Roadmap
+## 🛡 Why This Matters
 
-Temporal instability modeling for video
+Deepfake Trust Hub restores digital trust by:
 
-Audio spectrogram CNN classifier
+- Detecting manipulation artifacts  
+- Quantifying authenticity confidence  
+- Providing explainable AI decisions  
+- Ensuring secure and scalable infrastructure  
 
-Cross-modal consistency engine
+This prototype demonstrates how deep learning, API security, and modular architecture can work together to combat synthetic media threats.
 
-AI attention heatmaps
+---
 
-Model calibration & uncertainty estimation
+## 👨‍💻 Prototype Status
 
-Edge deployment optimization
+The repository contains a working prototype with fully implemented image deepfake detection and architecture-ready support for video and audio detection.
 
-Enterprise API layer
+---
 
-🎯 Target Applications
+## 📜 License
 
-Media authentication platforms
+MIT License
 
-Journalism verification tools
+---
 
-Social media moderation systems
-
-Digital forensics workflows
-
-Legal evidence validation
-
-Cybersecurity intelligence systems
-
-🛡 Why This Matters
-
-Deepfake Trust Hub is designed to restore digital trust by:
-
-Detecting manipulation artifacts
-
-Quantifying authenticity confidence
-
-Providing explainable AI decisions
-
-Ensuring secure inference pipelines
-
-The system demonstrates how deep learning, API security, and scalable architecture can work together to combat synthetic media threats.
-
-👨‍💻 Prototype Status
-
-This repository contains the working prototype of the intelligent deepfake detection system with full image-based inference implemented and multi-modal architecture prepared for expansion.
-
-⭐ Support the Project
-
-If this project interests you or helps your research, consider giving it a star.
+⭐ If this project interests you, consider giving it a star.
